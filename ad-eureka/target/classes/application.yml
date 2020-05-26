@@ -1,0 +1,62 @@
+spring:
+  application:
+    name: ad-eureka
+
+server:
+  port: 8000
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    fetch-registry: false  # 是否同步其他eureka服务
+    register-with-eureka: false  # 是否将自己注册到eureka服务
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+---
+spring:
+  profiles: server1
+  application:
+    name: ad-eureka
+server:
+  port: 8000
+eureka:
+  instance:
+    hostname: server1
+    prefer-ip-address: false  # 是否使用IP地址注册
+  client:
+    service-url:
+      defaultZone: http://server2:8001/eureka/,http://server3:8002/eureka/
+
+
+---
+spring:
+  profiles: server2
+  application:
+    name: ad-eureka
+server:
+  port: 8001
+eureka:
+  instance:
+    hostname: server2
+    prefer-ip-address: false  # 是否使用IP地址注册
+  client:
+    service-url:
+      defaultZone: http://server1:8000/eureka/,http://server3:8002/eureka/
+
+
+---
+spring:
+  profiles: server3
+  application:
+    name: ad-eureka
+server:
+  port: 8002
+eureka:
+  instance:
+    hostname: server3
+    prefer-ip-address: false  # 是否使用IP地址注册
+  client:
+    service-url:
+      defaultZone: http://server1:8000/eureka/,http://server2:8001/eureka/

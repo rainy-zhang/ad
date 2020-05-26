@@ -1,0 +1,54 @@
+server:
+  port: 7001
+  servlet:
+    context-path: /ad-search
+
+spring:
+  application:
+    name: eureka-client-ad-search
+  jpa:
+    show-sql: true  # 打印执行的sql语句
+    hibernate:
+      ddl-auto: none  # create:启动时创建表, create-drop:启动时创建,退出时删除, none:不使用hibernate维护数据库表结构, update: 启动时更新表结构, validate: 校验表结构是否正确
+    properties:
+      hibernate.format_sql: true  # 格式化sql语句
+    open-in-view: false  # 可能会出现懒加载导致的报错所以设置为false
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/ad_data?autoReconnect=true
+    username: root
+    password: root
+    tomcat:
+      max-active: 4  # 最大连接数
+      min-idle: 2  # 空闲连接数
+      initial-size: 2  # 初始化连接数
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+    listener:
+      concurrency: 4
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://server1:8000/eureka/
+
+feign:
+  hystrix:
+    enabled: true
+
+# 暴露出全部的监控信息
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+adconf:
+  mysql:
+    host: 127.0.0.1
+    port: 3306
+    username: root
+    password: root
+    binlogName: ""
+    position: -1  # -1代表从当前位置开始
+  kafka:
+    topic: ad-search-mysql-data
